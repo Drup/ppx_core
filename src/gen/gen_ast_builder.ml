@@ -121,8 +121,9 @@ module Gen(M : sig val fixed_loc : bool end) = struct
   open M
 
   let gen_combinator_for_constructor ~wrapper:(wpath, wprefix, has_attrs) path ~prefix cd =
-    let args =
-      List.mapi cd.cd_args ~f:(fun i _ -> sprintf "x%d" i)
+    let args = match cd.cd_args with
+      | Cstr_tuple l  -> List.mapi l ~f:(fun i _ -> sprintf "x%d" i)
+      | Cstr_record l -> List.mapi l ~f:(fun i _ -> sprintf "x%d" i)
     in
     let exp =
       Exp.construct (Loc.mk (fqn_longident path cd.cd_id))
@@ -189,10 +190,10 @@ module Gen(M : sig val fixed_loc : bool end) = struct
     let body =
       let l = List.filter funcs ~f:(fun f -> f <> "loc" && f <> "attributes") in
       match l with
-      | [x] -> Exp.fun_ "" None (pvar x) body
+      | [x] -> Exp.fun_ Nolabel None (pvar x) body
       | _ ->
         List.fold_right l ~init:body ~f:(fun func acc ->
-          Exp.fun_ func None (pvar func) acc
+          Exp.fun_ (Labelled func) None (pvar func) acc
         )
     in
 (*    let body =

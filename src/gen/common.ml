@@ -70,13 +70,25 @@ and add_type_declaration_dependencies env acc (td : Types.type_declaration) =
   | Type_variant cds ->
     List.fold_left cds ~init:acc
       ~f:(fun acc (cd : Types.constructor_declaration) ->
-         List.fold_left cd.cd_args ~init:acc
-           ~f:(add_type_expr_dependencies env))
+        match cd.cd_args with
+        | Cstr_tuple args ->
+          List.fold_left args ~init:acc
+            ~f:(add_type_expr_dependencies env)
+        | Cstr_record args ->
+          List.fold_left args ~init:acc
+            ~f:(fun acc (ld : Types.label_declaration) ->
+              add_type_expr_dependencies env acc ld.ld_type)
+      )
   | Type_abstract ->
     match td.type_manifest with
     | None -> acc
     | Some te -> add_type_expr_dependencies env acc te
 ;;
+
+let get_type_exprs (cd : Types.constructor_declaration) =
+  match cd.cd_args with
+  | Cstr_tuple l -> l
+  | Cstr_record l -> List.map l ~f:(fun x -> x.Types.ld_type)
 
 let get_types env unit =
   let signature =

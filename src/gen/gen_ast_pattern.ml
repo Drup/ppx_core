@@ -157,11 +157,12 @@ let assert_no_attributes ~path ~prefix =
   ]
 
 let gen_combinator_for_constructor ?wrapper path ~prefix cd =
+  let type_exprs = Common.get_type_exprs cd in
   let args =
-    List.mapi cd.cd_args ~f:(fun i _ -> sprintf "x%d" i)
+    List.mapi type_exprs ~f:(fun i _ -> sprintf "x%d" i)
   in
   let funcs =
-    List.mapi cd.cd_args ~f:(fun i _ -> sprintf "f%d" i)
+    List.mapi type_exprs ~f:(fun i _ -> sprintf "f%d" i)
   in
   let pat =
     Pat.construct (Loc.mk (fqn_longident path cd.cd_id))
@@ -171,14 +172,14 @@ let gen_combinator_for_constructor ?wrapper path ~prefix cd =
        | _   -> Some (Pat.tuple (List.map args ~f:pvar)))
   in
   let exp =
-    apply_parsers funcs (List.map args ~f:evar) cd.cd_args
+    apply_parsers funcs (List.map args ~f:evar) type_exprs
   in
   let expected = without_prefix ~prefix (Ident.name cd.cd_id) in
   let body =
     [%expr
       match x with
       | [%p pat] -> ctx.matched <- ctx.matched + 1; [%e exp]
-      | _ -> fail loc [%e Exp.constant (Const_string (expected, None))]
+      | _ -> fail loc [%e Exp.constant (PConst_string (expected, None))]
     ]
   in
   let body =
@@ -241,7 +242,7 @@ let gen_combinator_for_record path ~prefix ~has_attrs lds =
   let body = [%expr T (fun ctx loc x k -> [%e body])] in
   let body =
     List.fold_right funcs ~init:body ~f:(fun func acc ->
-      Exp.fun_ func None [%pat? T [%p pvar func]] acc)
+      Exp.fun_ (Labelled func) None [%pat? T [%p pvar func]] acc)
   in
   [%stri let [%p pvar (Common.function_name_of_path path)] = [%e body]]
 ;;
