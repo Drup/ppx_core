@@ -1,0 +1,5 @@
+PKG compiler-libs.common compiler-libs.bytecomp ppx_tools.metaquot
+
+S src/
+B _build
+FLG -w -40
