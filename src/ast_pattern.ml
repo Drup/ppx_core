@@ -115,10 +115,10 @@ let int32'     (T f) = T (fun ctx loc x k -> f ctx loc (Int32.of_string     x) k
 let int64'     (T f) = T (fun ctx loc x k -> f ctx loc (Int64.of_string     x) k)
 let nativeint' (T f) = T (fun ctx loc x k -> f ctx loc (Nativeint.of_string x) k)
 
-let const_int       t = pconst_int (int'       t) none
-let const_int32     t = pconst_int (int32'     t) (some (char 'l'))
-let const_int64     t = pconst_int (int64'     t) (some (char 'L'))
-let const_nativeint t = pconst_int (nativeint' t) (some (char 'n'))
+let const_int       t = pconst_integer (int'       t) none
+let const_int32     t = pconst_integer (int32'     t) (some (char 'l'))
+let const_int64     t = pconst_integer (int64'     t) (some (char 'L'))
+let const_nativeint t = pconst_integer (nativeint' t) (some (char 'n'))
 
 let eint       t = pexp_constant (const_int       t)
 let eint32     t = pexp_constant (const_int32     t)

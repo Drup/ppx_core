@@ -28,21 +28,21 @@ module Default = struct
                 ({ txt = "nonrec"; loc }, PStr []) :: td.ptype_attributes }
   ;;
 
-  let eint ~loc t = pexp_constant ~loc (PConst_int (string_of_int t, None))
-  let echar ~loc t = pexp_constant ~loc (PConst_char t)
-  let estring ~loc t = pexp_constant ~loc (PConst_string (t, None))
-  let efloat ~loc t = pexp_constant ~loc (PConst_float (t, None))
-  let eint32 ~loc t = pexp_constant ~loc (PConst_int (Int32.to_string t, Some 'l'))
-  let eint64 ~loc t = pexp_constant ~loc (PConst_int (Int64.to_string t, Some 'L'))
-  let enativeint ~loc t = pexp_constant ~loc (PConst_int (Nativeint.to_string t, Some 'n'))
+  let eint ~loc t = pexp_constant ~loc (Pconst_integer (string_of_int t, None))
+  let echar ~loc t = pexp_constant ~loc (Pconst_char t)
+  let estring ~loc t = pexp_constant ~loc (Pconst_string (t, None))
+  let efloat ~loc t = pexp_constant ~loc (Pconst_float (t, None))
+  let eint32 ~loc t = pexp_constant ~loc (Pconst_integer (Int32.to_string t, Some 'l'))
+  let eint64 ~loc t = pexp_constant ~loc (Pconst_integer (Int64.to_string t, Some 'L'))
+  let enativeint ~loc t = pexp_constant ~loc (Pconst_integer (Nativeint.to_string t, Some 'n'))
 
-  let pint ~loc t = ppat_constant ~loc (PConst_int (string_of_int t, None))
-  let pchar ~loc t = ppat_constant ~loc (PConst_char t)
-  let pstring ~loc t = ppat_constant ~loc (PConst_string (t, None))
-  let pfloat ~loc t = ppat_constant ~loc (PConst_float (t, None))
-  let pint32 ~loc t = ppat_constant ~loc (PConst_int (Int32.to_string t, Some 'l'))
-  let pint64 ~loc t = ppat_constant ~loc (PConst_int (Int64.to_string t, Some 'L'))
-  let pnativeint ~loc t = ppat_constant ~loc (PConst_int (Nativeint.to_string t, Some 'n'))
+  let pint ~loc t = ppat_constant ~loc (Pconst_integer (string_of_int t, None))
+  let pchar ~loc t = ppat_constant ~loc (Pconst_char t)
+  let pstring ~loc t = ppat_constant ~loc (Pconst_string (t, None))
+  let pfloat ~loc t = ppat_constant ~loc (Pconst_float (t, None))
+  let pint32 ~loc t = ppat_constant ~loc (Pconst_integer (Int32.to_string t, Some 'l'))
+  let pint64 ~loc t = ppat_constant ~loc (Pconst_integer (Int64.to_string t, Some 'L'))
+  let pnativeint ~loc t = ppat_constant ~loc (Pconst_integer (Nativeint.to_string t, Some 'n'))
 
   let ebool ~loc t = pexp_construct ~loc (Located.lident ~loc (string_of_bool t)) None
   let pbool ~loc t = ppat_construct ~loc (Located.lident ~loc (string_of_bool t)) None

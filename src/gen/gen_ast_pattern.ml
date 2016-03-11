@@ -181,7 +181,7 @@ let gen_combinator_for_constructor ?wrapper path ~prefix cd =
       [%expr
         match x with
         | [%p pat] -> ctx.matched <- ctx.matched + 1; [%e exp]
-        | _ -> fail loc [%e Exp.constant (PConst_string (expected, None))]
+        | _ -> fail loc [%e Exp.constant (Pconst_string (expected, None))]
       ]
     in
     let body =
